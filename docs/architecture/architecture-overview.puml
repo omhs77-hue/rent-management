@@ -1,0 +1,29 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam wrapWidth 220
+skinparam linetype ortho
+skinparam rectangle {
+  RoundCorner 10
+}
+
+component "GitHub\n(リポジトリ / GitHub Actions)" as GitHub
+component "Supabase\n(DB / Auth / Storage)" as Supabase
+component "Cloudflare Pages\n業務 Web アプリ (SPA)" as Pages
+component "MCPサーバ\n(Supabase MCP Server)" as MCP
+component "GPT\n(MCP対応クライアント)" as GPT
+cloud "外部 Web サービス群\n(清掃サービス・保証会社等)" as External
+
+GitHub --> Pages : コードビルド/配布
+GitHub --> MCP : MCPサーバのコード配送
+GitHub --> GitHub : GitHub Actions ワークフロー
+
+GitHub -[#blue]-> External : スケジュール/イベント駆動 (Actions)
+GitHub -[#blue]-> Supabase : バッチがデータ書き込み
+External -[#green]- GitHub : 清掃実績・請求情報取得
+
+Pages -[#teal]- Supabase : DB/Storage 参照・更新
+
+GPT -[#orange]- MCP : MCPツール呼び出し
+MCP -[#orange]- Supabase : クエリ・更新
+
+@enduml
