@@ -1,0 +1,22 @@
+paths:
+  data_root: "./data"
+
+http:
+  user_agent: "Mozilla/5.0 (compatible; SelfManagedCorpusBot/0.1; +mailto:example@example.com)"
+
+http_client:
+  timeout: 30
+
+domains:
+  default:
+    factor: 1.0
+  "aobalife.net":
+    factor: 1.2
+  "ooya0083.blog.fc2.com":
+    factor: 1.3
+  "blog.hpns.jp":
+    factor: 1.2
+  "lsize.xyz":
+    factor: 1.2
+  "shiro-shita.info":
+    factor: 1.2

@@ -1,0 +1,18 @@
+__pycache__/
+*.pyc
+.env
+.venv
+.envrc
+.idea/
+.vscode/
+.DS_Store
+
+# local data and logs
+/data/
+logs/
+*/__pycache__/
+
+# python build artifacts
+*.egg-info/
+dist/
+build/
