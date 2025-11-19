@@ -1,0 +1,8 @@
+- name: joyful_ooya_blog
+  base_url: "https://example.com"
+  start_urls:
+    - "https://example.com/category/self-management"
+  article_link_selector: "article h2 a"
+  content_selector: "article .entry-content"
+  title_selector: "article h1"
+  date_selector: "time.entry-date"

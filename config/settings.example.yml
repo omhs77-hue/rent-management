@@ -1,0 +1,19 @@
+paths:
+  data_root: "./data"
+
+http:
+  user_agent: "Mozilla/5.0 (compatible; SelfManagedCorpusBot/0.1; +mailto:example@example.com)"
+
+http_client:
+  timeout: 30
+
+domains:
+  default:
+    factor: 1.0
+  example.com:
+    factor: 1.2
+  blog.example.jp:
+    factor: 1.5
+
+concurrency:
+  max_tasks: 2
