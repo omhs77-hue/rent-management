@@ -28,3 +28,5 @@
 7. YouTube 収集: `python -m src.pipelines.crawl_youtube`
 
 各パイプラインは robots.txt を尊重し、レスポンスサイズに応じて 0.5〜3 秒程度の human-like ウェイトを入れながらクロールします。取得データは `config/settings.yml` で指定した `data_root` 以下に JSONL として保存されます。ローカル専用データのため Git には含めません。
+
+取得データは `config/settings.yml` で指定した `data_root` 以下に JSONL として保存されます。ローカル専用データのため Git には含めません。

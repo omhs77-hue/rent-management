@@ -20,3 +20,6 @@ domains:
     factor: 1.2
   "shiro-shita.info":
     factor: 1.2
+concurrency:
+  max_tasks: 2
+
