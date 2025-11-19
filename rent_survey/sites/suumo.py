@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 class SuumoClient(SiteClient):
     site_name = "suumo"
-    BASE_URL = "https://suumo.jp/chintai"
+    BASE_URL = "https://suumo.jp/chintai/"
 
     def __init__(self, http_client: RateLimitedClient):
         super().__init__(http_client)

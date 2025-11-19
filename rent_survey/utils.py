@@ -23,8 +23,16 @@ STATION_PATTERN = re.compile(r"(?P<station>[^\s　]+)\s*徒歩\s*(?P<minutes>\d+
 class RateLimitedClient:
     """Thin wrapper around httpx.Client with human-like pacing."""
 
-    def __init__(self, user_agent: str, min_interval: float = 1.0, timeout: float = 30.0):
-        self.client = httpx.Client(headers={"User-Agent": user_agent}, timeout=timeout)
+    def __init__(
+        self,
+        user_agent: str,
+        min_interval: float = 1.0,
+        timeout: float = 30.0,
+        follow_redirects: bool = True,
+    ):
+        self.client = httpx.Client(
+            headers={"User-Agent": user_agent}, timeout=timeout, follow_redirects=follow_redirects
+        )
         self.min_interval = max(0.1, min_interval)
         self._next_request = 0.0
 
