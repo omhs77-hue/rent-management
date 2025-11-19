@@ -1,0 +1,40 @@
+@startuml
+!define SHOW_STEREOTYPE
+skinparam handwritten false
+skinparam wrapWidth 220
+skinparam linetype ortho
+skinparam rectangle {
+  RoundCorner 10
+}
+
+actor "業務利用者\n(オーナー・担当者)" as User
+actor "GPT\n(MCP対応)" as GPT
+cloud "外部 Web サービス群\n(清掃サービス・保証会社等)" as External
+folder "GitHub\n(リポジトリ + Actions)" as GitHub
+
+database "Supabase\n(DB + Auth + Storage)" as Supabase
+
+frame "実行環境群" {
+  rectangle "P1: GitHub Actions\nバッチ／クローラ" as P1
+  rectangle "P2: Cloudflare Pages\n業務 Web アプリ (SPA)" as P2
+  rectangle "P3: Supabase MCP サーバ\n(ローカル/小規模サーバ)" as P3
+}
+
+User --> GPT : 自然言語での問い合わせ
+GPT --> P3 : MCPツール呼び出し
+P3 --> Supabase : クエリ/更新
+Supabase --> P3 : データ返却
+P3 --> GPT : 結果返却
+GPT --> User : 回答
+
+P1 <-- External : 清掃実績・レポート取得
+P1 --> Supabase : タスク/レポートメタ書き込み
+
+P2 --> Supabase : タスク一覧取得・ステータス更新
+Supabase --> P2 : ストレージ上のレポートURL等
+
+GitHub --> P1 : コード/設定提供
+GitHub --> P2 : Webアプリビルド成果物
+GitHub --> P3 : MCPサーバコード
+
+@enduml
