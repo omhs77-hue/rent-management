@@ -5,6 +5,7 @@ import logging
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional
+from urllib.parse import urlparse
 from xml.etree import ElementTree
 
 import httpx
@@ -74,7 +75,7 @@ class YouTubeCrawler:
     def crawl_channel(self, channel_config: Dict, output_path: Path) -> int:
         output_path.parent.mkdir(parents=True, exist_ok=True)
         today = datetime.utcnow().strftime("%Y-%m-%d")
-        channel_id = channel_config["channel_id"]
+        channel_id = self._resolve_channel_id(channel_config)
         videos = self.list_videos_from_channel(channel_id)
         collected = 0
 
@@ -96,3 +97,64 @@ class YouTubeCrawler:
                 collected += 1
         LOGGER.info("%s: collected %s videos", channel_config.get("name", channel_id), collected)
         return collected
+
+    # ------------------------------------------------------------------
+    # Channel resolution helpers
+    # ------------------------------------------------------------------
+    def _resolve_channel_id(self, channel_config: Dict) -> str:
+        if channel_config.get("channel_id"):
+            return channel_config["channel_id"]
+
+        channel_url = channel_config.get("channel_url")
+        if not channel_url:
+            raise ValueError("channel_id or channel_url must be provided for each YouTube seed")
+
+        parsed = urlparse(channel_url)
+        path = parsed.path.strip("/")
+
+        if path.startswith("channel/"):
+            return path.split("/", maxsplit=1)[1]
+        if path.startswith("user/"):
+            username = path.split("/", maxsplit=1)[1]
+            channel_id = self._channel_id_from_username(username)
+            if channel_id:
+                return channel_id
+        if path.startswith("@"):
+            handle = path.lstrip("@")
+            channel_id = self._channel_id_from_handle(handle)
+            if channel_id:
+                return channel_id
+
+        # last resort: try searching by full URL text
+        channel_id = self._channel_id_from_search(channel_config.get("name") or channel_url)
+        if channel_id:
+            return channel_id
+        raise ValueError(f"Unable to resolve channel id for {channel_url}")
+
+    def _channel_id_from_username(self, username: str) -> Optional[str]:
+        request = self.client.channels().list(part="id", forUsername=username)
+        response = request.execute()
+        items = response.get("items", [])
+        if items:
+            return items[0].get("id")
+        return None
+
+    def _channel_id_from_handle(self, handle: str) -> Optional[str]:
+        request = self.client.search().list(part="snippet", q=handle, type="channel", maxResults=1)
+        response = request.execute()
+        for item in response.get("items", []):
+            snippet = item.get("snippet", {})
+            channel_id = snippet.get("channelId")
+            if channel_id:
+                return channel_id
+        return None
+
+    def _channel_id_from_search(self, term: str) -> Optional[str]:
+        request = self.client.search().list(part="snippet", q=term, type="channel", maxResults=1)
+        response = request.execute()
+        for item in response.get("items", []):
+            snippet = item.get("snippet", {})
+            channel_id = snippet.get("channelId")
+            if channel_id:
+                return channel_id
+        return None

@@ -10,10 +10,16 @@ http_client:
 domains:
   default:
     factor: 1.0
-  example.com:
+  "aobalife.net":
     factor: 1.2
-  blog.example.jp:
-    factor: 1.5
-
+  "ooya0083.blog.fc2.com":
+    factor: 1.3
+  "blog.hpns.jp":
+    factor: 1.2
+  "lsize.xyz":
+    factor: 1.2
+  "shiro-shita.info":
+    factor: 1.2
 concurrency:
   max_tasks: 2
+

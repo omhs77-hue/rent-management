@@ -74,8 +74,12 @@ class BlogCrawler:
 
         soup = BeautifulSoup(response.text, "lxml")
         title = self._extract_text(soup, site_config.get("title_selector"))
+        if not title and soup.title and soup.title.string:
+            title = clean_text(soup.title.string)
         content = self._extract_content(soup, site_config.get("content_selector"))
         if not content:
+            content = clean_text(soup.get_text(separator="\n"))
+        if not content.strip():
             LOGGER.debug("Empty content for %s", article_url)
             return None
 

@@ -8,7 +8,7 @@ from typing import List
 
 import yaml
 
-from src.config import get_settings
+from src.config import ensure_data_directories, get_settings
 from src.crawlers.blog_crawler import BlogCrawler
 from src.utils.http_client import HumanHttpClient
 
@@ -37,6 +37,7 @@ def configure_logging(log_path: Path) -> None:
 
 def main() -> None:
     settings = get_settings()
+    ensure_data_directories(settings)
     seeds = load_seeds()
     log_path = settings.data_root() / "logs" / "crawl-blogs.log"
     configure_logging(log_path)
@@ -51,7 +52,6 @@ def main() -> None:
 
     today = datetime.utcnow().strftime("%Y-%m-%d")
     raw_dir = settings.data_root() / "raw" / "blogs"
-    raw_dir.mkdir(parents=True, exist_ok=True)
 
     for site in seeds:
         output_path = raw_dir / f"{today}-{site.get('name', 'unknown')}.jsonl"

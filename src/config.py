@@ -56,3 +56,17 @@ def resolve_data_path(*parts: str) -> Path:
     path = settings.data_root().joinpath(*parts)
     path.parent.mkdir(parents=True, exist_ok=True)
     return path
+
+
+def ensure_data_directories(settings: Settings) -> None:
+    """Ensure the expected directory tree exists under the data root."""
+
+    root = settings.data_root()
+    required = [
+        root / "raw" / "blogs",
+        root / "raw" / "youtube",
+        root / "processed" / "chunks",
+        root / "logs",
+    ]
+    for path in required:
+        path.mkdir(parents=True, exist_ok=True)

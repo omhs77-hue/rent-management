@@ -1,5 +1,28 @@
-- name: joyful_ooya_channel
-  channel_id: UCxxxxxxxxxxxxxxxx
+
+- name: jishukanri_no_susume
+  channel_url: "https://www.youtube.com/channel/UC-0KF7LK19Tdf5H6ddYCRZQ"
+  note: "【不動産投資】自主管理のすすめ。一棟マンション等の自主管理ノウハウ。"
   tags:
     - self-management
+    - rental
+
+- name: gens_fudosan
+  channel_url: "https://www.youtube.com/channel/UC3ip4gGd5yk7HO9epbeOf-A"
+  note: "Gen's不動産【沖野元公式】。自主管理を含む賃貸経営・管理会社との付き合い方。"
+  tags:
     - landlord
+    - jishukanri
+
+- name: compass_channel
+  channel_url: "https://www.youtube.com/@owners_compass"
+  note: "COMPASSチャンネル。自主管理オーナー向けサービス、トラブル対応・セミナー。"
+  tags:
+    - owners-compass
+    - troubles
+
+- name: ohya_chiebukuro
+  channel_url: "https://www.youtube.com/channel/UCSbMHI5L3J63erJa_nqaATQ"
+  note: "大家さんの知恵袋。税理士大家による賃貸経営全般・自主管理のメリデメ・税務。"
+  tags:
+    - tips
+    - taxation

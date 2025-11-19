@@ -9,7 +9,7 @@ from typing import List
 
 import yaml
 
-from src.config import get_settings
+from src.config import ensure_data_directories, get_settings
 from src.crawlers.youtube_crawler import YouTubeCrawler
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -37,6 +37,7 @@ def configure_logging(log_path: Path) -> None:
 
 def main() -> None:
     settings = get_settings()
+    ensure_data_directories(settings)
     seeds = load_seeds()
     log_path = settings.data_root() / "logs" / "crawl-youtube.log"
     configure_logging(log_path)
@@ -46,10 +47,10 @@ def main() -> None:
 
     today = datetime.utcnow().strftime("%Y-%m-%d")
     raw_dir = settings.data_root() / "raw" / "youtube"
-    raw_dir.mkdir(parents=True, exist_ok=True)
 
     for channel in seeds:
-        output_path = raw_dir / f"{today}-{channel.get('name', channel['channel_id'])}.jsonl"
+        identifier = channel.get("name") or channel.get("channel_id") or "channel"
+        output_path = raw_dir / f"{today}-{identifier}.jsonl"
         crawler.crawl_channel(channel, output_path)
 
     crawler.close()
