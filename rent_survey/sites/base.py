@@ -31,3 +31,20 @@ class SiteClient(ABC):
 
     def log_skip(self, reason: str) -> None:
         logger.warning("%s skipped: %s", self.site_name, reason)
+
+    @staticmethod
+    def detect_blocking(html: str) -> str | None:
+        """Return a human friendly reason if the response looks blocked or empty."""
+
+        lowered = html.lower()
+        markers = {
+            "captcha": "blocked_by_captcha",
+            "forbidden": "forbidden",
+            "アクセスが頻繁": "rate_limited",
+            "アクセスが集中": "rate_limited",
+            "条件に一致する物件は見つかりません": "no_results_on_site",
+        }
+        for marker, reason in markers.items():
+            if marker in lowered:
+                return reason
+        return None

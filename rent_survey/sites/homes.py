@@ -39,6 +39,10 @@ class HomesClient(SiteClient):
                 listings.append(listing)
             if len(listings) >= limit:
                 break
+        if not listings:
+            reason = self.detect_blocking(response.text) or "no_listings_parsed"
+            self.log_skip(reason)
+            raise ValueError(reason)
         return listings[:limit]
 
     def _build_query_params(self, query: SurveyQuery) -> dict:
